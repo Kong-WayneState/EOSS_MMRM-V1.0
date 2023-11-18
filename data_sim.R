@@ -118,7 +118,7 @@ CAPS5.MMRM.sim <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NU
 CAPS5.MMRM.sim.n <- function(n, seed, ss, trt.rate, mu0, sd0, corr0, 
                              fu1, fu2, fu3=NULL){
   #set up parallel generators and seed
-  my_cluster <- makeCluster(ncore) #
+  my_cluster <- makeCluster(num.core) #
   clusterSetRNGStream(cl = my_cluster, seed)
   
   #generate n-trails of data
