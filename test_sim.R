@@ -49,7 +49,7 @@ CAPS5.MMRM.test <- function(MMRM){ #one trial of simulated data
 
 CAPS5.MMRM.test.n <- function(simdata, alpha = 0.05){
   #set up parallel generation
-  my_cluster <- makeCluster(ncore) #
+  my_cluster <- makeCluster(num.core) #
   
   #generate n-pvalues from mmrm test
   p.val = unlist(parLapply(my_cluster, simdata, CAPS5.MMRM.test))
