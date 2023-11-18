@@ -10,7 +10,7 @@ mod_ui <- function(id){
         width = 4,
         br(),
         numericInput(ns("seed"), "Random Seed", 1234),
-        numericInput(ns("n"), "Number of Simulations", 500),
+        numericInput(ns("n"), "Number of Simulations", 00),
         numericInput(ns("alpha"), "Significant Level", 0.05, 
                      min = 0.01, max = 0.2, step = 0.01),
         br(),
