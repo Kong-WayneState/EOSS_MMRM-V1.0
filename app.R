@@ -12,7 +12,7 @@ num.core = detectCores()-1 # at most
 
 source("data_sim.R")
 source("test_sim.R")
-source("mod.R")
+source("mmrm_mod.R")
 
 
 app_ui <- function(request) {
