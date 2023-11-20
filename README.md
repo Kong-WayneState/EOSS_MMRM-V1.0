@@ -8,7 +8,7 @@
    ### For example: install.packages(c("shiny", "shinydashboard", "dplyr", "mmrm", "rsconnect"))
 
 ## 4. In the "app.R" file, set the number of cores for parallel calculation and run it. 
-   #### The default set up is num.core = 6
+   ### The default set up is num.core = 6
    ### You can adjust this number based on your system capabilities.
    ### For example, if your computer has 32 cores, you may set num.core = 32 or less
   
