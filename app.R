@@ -7,8 +7,7 @@ library(parallel)
 
 
 #'Set number of cores for parallel calculation
-# num.core = 6
-num.core = detectCores()-1 # at most
+num.core = 6
 
 source("data_sim.R")
 source("test_sim.R")
