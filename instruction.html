@@ -14,7 +14,7 @@
 }
  
 html,body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Arial', Helvetica, sans-serif;
   line-height: 1.2em;
   font-size: 16px;
   padding: 10px;
@@ -72,47 +72,63 @@ p {
 
 <body>
   <div class="header">
-<h1>Running the Shiny App</h1>
+<h1>Running the Shiny App:</h1>
       
-<p><span style="font-weight:bold;">Abbreviations:</span>
-<span style="color:#0C5449;"> TRT -- treatment; EFU -- efficacy follow-up; ET -- early termination (from study treatment); PBO -- placebo; SS -- sample size.</span></p>
+<p><span style="font-weight:bold;"> Abbreviations:</span>
+<table>
+  <tr>
+    <td>SS&nbsp;</td>
+    <td>— Sample Size</td>
+  </tr>
+  <tr>
+    <td>TRT&nbsp;</td>
+    <td>— Treatment</td>
+  </tr>
+  <tr>
+    <td>PBO&nbsp; </td>
+    <td>— Placebo</td>
+  </tr>
+  <tr>
+    <td>ET&nbsp;</td>
+    <td>— Early Termination</td>
+  </tr>
+  <tr>
+    <td>EFU&nbsp;</td>
+    <td>— Efficacy Follow-Up</td>
+  </tr>
+</table>
+</p>
 
 <p>1. Set a random seed. <br></p>
 
 <p>2. Enter the number of simulations.<br></p>
 
-<p>3. Enter the two-sided alpha in the box labeled <b>Significant Level</b>.<br></p>
+<p>3. Enter the two-sided &alpha; in the box labeled <b>Significant Level</b>.<br></p>
 
-<p>4. Enter the total sample size of the trial (total number of subjects planned to be randomized) in the box labeled <b>Sample Size</b>.<br> </p>
+<p>4. Enter the total SS for each trial data (total number of subjects planned to be randomized) in the box labeled <b>Sample Size</b>. <br> </p>
 
-<p>5. For <b>TRT Rate</b>, enter 0.5 if treatment:placebo = 1:1; enter 0.67 if treatment: placebo = 2:1.<br></p>
+<p>5. For <b>TRT Rate</b>, enter 0.5 if the TRT-to-PBO ratio is 1:1; enter 0.67 if the TRT-to-PBO ratio is 2:1.<br></p>
 
-<p>6. Choose the number of post baseline visits.<br></p>
+<p>6. Choose the number of post-baseline visits.<br></p>
 
-<p>7. Enter the baseline mean, common standard deviation and correlation among visits.<br></p>
+<p>7. Enter the baseline mean, common standard deviation, and correlation among visits.<br></p>
 
-<p>8. For each of the post baseline visits:<br></p>
+<p>8. For each of the post-baseline visits:<br></p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;(1) <b>Efficacy</b> is the expected difference between treatment and placebo for subjects who have stayed on study treatment until that visit.<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;(1) <b>Efficacy</b> is the expected difference between TRT and PBO for subjects who have stayed on study treatment until that visit.<br></p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;(2) <b>EFU Efficacy</b> is the expected difference between treatment and placebo 
-for the ET subjects who have been assessed for efficacy at the EFU visit.<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;(2) <b>EFU Efficacy</b> is the expected difference between TRT and PBO for the ET subjects who have been assessed for efficacy at the EFU visit.<br></p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;(3) <b>EFU Rate</b> is the proportion of the ET subjects who have been assessed for efficacy at the EFU visit.<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;(3) <b>EFU Rate</b> is the proportion of ET subjects assessed for efficacy at the EFU visit.<br></p>
 
-<p>9. Specify the <b>ET Rate</b> for each arm at each post baseline visit. For
-example, if 10% TRT subjects and 5% PBO subjects discontinue study treatment at
-the end of post baseline visit 1 and an additional 15% TRT subjects and 2% PBO
-subjects discontinue study treatment at the end of post baseline visit 2 (as shown
-in the table below), enter 0.1 for <b>ET Rate TRT 1</b>, 0.05 for <b>ET Rate PBO 1</b>,
-0.15 for<b> ET Rate TRT 2</b>, and 0.02 for<b> ET Rate PBO 2</b>. <br></p>
+<p>9. Specify the <b>ET Rate</b> for each arm at each post-baseline visit. For example, if 15% of TRT subjects and 12% of PBO subjects discontinue study treatment at the end of post-baseline visit 1 and an additional (based on the original enrollment) 10% of TRT subjects and 9% of PBO subjects discontinue study treatment at the end of post-baseline visit 2 (as shown in the table below), enter 0.15 for <b>TRT ET Rate 1</b>, 0.09 for <b>PBO ET Rate 1</b>, 0.1 for <b>TRT ET Rate 2</b>, and 0.06 for <b>PBO ET Rate 2</b>.<br></p>
 
 
-<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;' 
+<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;background-color: #f0f0f0; ' 
 class="center">
  <tr>
    <td width=80 valign=top style='border:solid  1.0pt;
-  border-alt:solid  .5pt;      padding:5px 5px 5px 10px'>
+  border-alt:solid  .5pt;   padding:5px 5px 5px 10px'>
   </td>
   <td width=120 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
@@ -122,12 +138,12 @@ class="center">
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  <b>Post Baseline 1 SS</b>
+  <b>Post-Baseline 1 SS</b>
   </td>
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  <b>Post Baseline 2 SS</b>
+  <b>Post-Baseline 2 SS</b>
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
@@ -146,12 +162,12 @@ class="center">
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  100 - 100*10% = 90
+  100 - 100*15% = 85
   </td>
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  90 - 100*15% = 75
+  85 - 100*10% = 75
   </td>
   <td width=120 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
@@ -172,17 +188,17 @@ class="center">
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  100 - 100*5% = 95
+  100 - 100*9% = 91
   </td>
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  95 - 100*2% = 93
+  91 - 100*6% = 85
   </td>
   <td width=120 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  7%
+  15%
   </td>
   </tr>
   <tr>
@@ -198,33 +214,33 @@ class="center">
   <td  width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  185
+  176
   </td>
   <td width=180 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  168
+  160
   </td>
   <td width=120 valign=top style='border:solid 1.0pt;
   border-left:none;border-left-alt:solid  .5pt;border-alt:
   solid  .5pt;      padding:5px 5px 5px 10px'>
-  16%
+  20%
   </td>
   </tr>
 </table>
 
 <br>
 
-<p>10. Click the <b>Simulate</b> button to simulate trial power.<br></p>
+<p>10. Click the <b>Simulate</b> button to generate trial data based on the input and initiate the power calculation (proportion of times the null hypothesis is rejected) for the simulation trials.<br></p>
 
-<p>11. You can browse the first trial of simulated data and download the entire simulated trial data in an Excel sheet.<br></p>
+<p>11. You can browse the first trial of simulated data and download the entire set of simulated trial data in an Excel sheet.<br></p>
 
  <br>
  <br>
   
 </div>
 
-
+<!--
 <div class="readme-p">
   <h2><span style="font-weight:bold;">Other Links</span></h2>
   <a href="" target="_blank">Mixed Models for Repeated Measures</a>
@@ -238,7 +254,7 @@ class="center">
   <br>
   </div>
   
-<!--
+
 <div class="footer">
   <p>&copy; 2023</a></p>
 </div>
