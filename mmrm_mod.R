@@ -118,7 +118,7 @@ mod_server <- function(id) {
               ),
               div(class = "input",
                   sliderInput(inputId = ns(paste0("efu.rate.fu",i)),
-                              label = paste("EFU Rate", i), value = 0.5-i*0.1,
+                              label = paste("EFU Rate", i), value = 0.4-i*0.1,
                               min = 0, max = 1, step = 0.05)
               ))))
       
