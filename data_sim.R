@@ -9,7 +9,6 @@ library(parallel)
 
 #Generate data for a single trial
 MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
-  library(dplyr)
   if (is.list(fu3)){nf = 3} else {nf = 2} #nf: number of post-baseline visits
   mu <- rep(mu0, (nf+1))   # baseline mean vector
   rho <- matrix(corr0, (nf+1), (nf+1))
@@ -113,9 +112,7 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
       dplyr::select(id, trt, y0, y1, y2, y3)
   }
   
-  
   return(MMRM_data)
-  
 }
 
 #Generate data for n trials.
