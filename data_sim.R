@@ -50,7 +50,7 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
     pbo.end[pbo.set] <- efu.pbo
     
     #Generate data with TRT Efficacy and EFU Efficacy
-    MMRM_data = data.frame(id=1:ss, trt = trt, 
+    MMRM.data = data.frame(id=1:ss, trt = trt, 
                         trt.end = trt.end,
                         pbo.end = pbo.end,
                         eff.y1 = (fu1$eff)*trt, 
@@ -63,7 +63,7 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
                     y1 = round(sim.data[, 2]-eff.y1, 2),
                     y2 = round(sim.data[, 3]-eff.y2, 2))
     
-    MMRM_data = MMRM_data %>% 
+    MMRM.data = MMRM.data %>% 
       dplyr::select(id, trt, y0, y1, y2)
   }else {
     # For 3 post-baseline visits:
@@ -90,7 +90,7 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
     pbo.end[pbo.set] <- efu.pbo
    
     #Generate data with TRT Efficacy and EFU Efficacy
-    MMRM_data = data.frame(id=1:ss, trt = trt, 
+    MMRM.data = data.frame(id=1:ss, trt = trt, 
                         trt.end = trt.end,
                         pbo.end = pbo.end,
                         eff.y1 = (fu1$eff)*trt, 
@@ -108,11 +108,11 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
                     y3 = round(sim.data[, 4]-eff.y3, 2))
     
     
-    MMRM_data = MMRM_data %>% 
+    MMRM.data = MMRM.data %>% 
       dplyr::select(id, trt, y0, y1, y2, y3)
   }
   
-  return(MMRM_data)
+  return(MMRM.data)
 }
 
 #Generate data for n trials.
