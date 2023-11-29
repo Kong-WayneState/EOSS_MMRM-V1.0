@@ -9,9 +9,9 @@
 library(parallel)
 
 #Calculate the p-value for one trial of data using mmrm() regression
-MMRM.test.1 <- function(MMRM){
-  if ("y3" %in% names(MMRM)){
-    longData = reshape(MMRM, varying=c("y1", "y2", "y3"),
+MMRM.test.1 <- function(MMRM.data){
+  if ("y3" %in% names(MMRM.data)){
+    longData = reshape(MMRM.data, varying=c("y1", "y2", "y3"),
                        direction="long", sep="", idvar="id") %>%
       dplyr::arrange(desc(id), desc(time)) %>%
       dplyr::mutate(time = factor(time), trt = factor(trt), id = factor(id)) 
@@ -24,7 +24,7 @@ MMRM.test.1 <- function(MMRM){
     contrast[c(3, 7)] <- 1
     p.val = df_1d(fit3, contrast)$p_val
   } else{
-    longData = reshape(MMRM, varying=c("y1", "y2"),
+    longData = reshape(MMRM.data, varying=c("y1", "y2"),
                        direction="long", sep="", idvar="id") %>%
       dplyr::arrange(desc(id), desc(time)) %>%
       dplyr::mutate(time = factor(time), trt = factor(trt), id = factor(id))
@@ -37,8 +37,8 @@ MMRM.test.1 <- function(MMRM){
     contrast[c(3, 5)] <- 1
     p.val = df_1d(fit2, contrast)$p_val
   }
-  return(p.val)
   
+  return(p.val)
 }
 
 
@@ -53,5 +53,6 @@ MMRM.test.n <- function(simdata, alpha = 0.05){
   power = mean(p.vals < alpha)
   
   stopCluster(my_cluster)
+  
   return(power = power)
 }
