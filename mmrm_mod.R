@@ -1,9 +1,6 @@
 #' Mod for ui and server
 #' 
 
-library(shiny)
-library(shinyjs)
-library(shinydashboard)
 
 mod_ui <- function(id){
   ns <- NS(id)
