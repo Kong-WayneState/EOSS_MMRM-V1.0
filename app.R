@@ -2,7 +2,7 @@
 
 #'Step 1: In the R Studio console, install the necessary packages 
 #'(only needed for the first time)
-# # install.packages(c("shiny", "shinyjs", "shinydashboard", "dplyr", "mmrm", "DT"))
+# install.packages(c("shiny", "shinyjs", shinydashboard", "DT", "dplyr", "mmrm"))
 
 #'Step 2: Set the number of cores for parallel calculation. 
 #'The default setup is with 6 cores.
@@ -15,8 +15,6 @@ num.core = 6     #select and run the code in the console
 
 #library(rsconnect)
 library(shiny)
-library(shinyjs)
-library(shinydashboard)
 
 source("data_sim.R")
 source("test_sim.R")
