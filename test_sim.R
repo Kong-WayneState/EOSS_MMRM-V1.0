@@ -10,9 +10,6 @@ library(parallel)
 
 #Calculate the p-value for one trial of data using mmrm() regression
 MMRM.test.1 <- function(MMRM){
-  library(dplyr)
-  library(mmrm)
-  
   if ("y3" %in% names(MMRM)){
     longData = reshape(MMRM, varying=c("y1", "y2", "y3"),
                        direction="long", sep="", idvar="id") %>%
