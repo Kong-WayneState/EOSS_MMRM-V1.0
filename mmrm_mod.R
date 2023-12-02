@@ -33,7 +33,7 @@ mod_ui <- function(id){
                    fluidRow(
                      br(),
                      column(12, 
-                            column(3, numericInput(ns("ss"), "Sample Size", 130)),
+                            column(3, numericInput(ns("ss"), "Sample Size", 140)),
                             column(3, numericInput(ns("trt.rate"), "TRT Rate", 
                                                    0.5, min = 0, max = 1, step = 0.05)),
                             column(5, align="left", 
@@ -207,7 +207,7 @@ mod_server <- function(id) {
       #DOWNLOAD BUTTON 
       output$downloadData <- downloadHandler(
         filename = function() { 
-          paste("data-mmrm-", Sys.Date(), ".csv", sep="")
+          paste("data_mmrm_", Sys.Date(), ".csv", sep="")
         },
         content = function(file) {
           write.csv(finalData(), file)
