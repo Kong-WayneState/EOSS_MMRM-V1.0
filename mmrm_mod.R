@@ -210,7 +210,7 @@ mod_server <- function(id) {
           paste("data_mmrm_", Sys.Date(), ".csv", sep="")
         },
         content = function(file) {
-          write.csv(finalData(), file)
+          write.csv(sampleData, row.names = FALSE, file)
         })
       
     })
