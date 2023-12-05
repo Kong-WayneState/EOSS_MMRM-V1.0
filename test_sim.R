@@ -23,7 +23,7 @@ MMRM.test.1 <- function(MMRM_data){
                       control = mmrm_control(method = "Kenward-Roger-Linear")) # mmrm v0.2.2
                       
     #control = mmrm_control(method = "Kenward-Roger",
-    #vcov = "Kenward-Roger-Linear"))# in control for mmrm v0.3.6
+    #vcov = "Kenward-Roger-Linear")) # mmrm v0.3.6
     
     contrast <- numeric(length(mmrm::component(fit3, "beta_est")))
     contrast[c(3, 7)] <- 1
@@ -39,7 +39,7 @@ MMRM.test.1 <- function(MMRM_data){
                       control = mmrm_control(method = "Kenward-Roger-Linear")) # mmrm v0.2.2
     
     #control = mmrm_control(method = "Kenward-Roger",
-    #vcov = "Kenward-Roger-Linear"))# in control for mmrm v0.3.6
+    #vcov = "Kenward-Roger-Linear")) # mmrm v0.3.6
     
     contrast <- numeric(length(mmrm::component(fit2, "beta_est")))
     contrast[c(3, 5)] <- 1
