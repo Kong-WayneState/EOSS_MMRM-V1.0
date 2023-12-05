@@ -1,4 +1,4 @@
-#'Generate Data.
+#'Generate MMRM Data.
 
 #'Set the number of cores for parallel calculation. 
 #'The default setup is with 6 cores.
@@ -10,7 +10,7 @@ library(parallel)
 #Generate data for a single trial
 MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
   library(dplyr)
-  if (is.list(fu3)){nf = 3} else {nf = 2} #nf: number of post-baseline visits
+  nf = ifelse(is.list(fu3), 3, 2) # nf: number of post-baseline visits
   mu <- rep(mu0, (nf+1))   # baseline mean vector
   rho <- matrix(corr0, (nf+1), (nf+1))
   diag(rho) <- 1       # correlation matrix
@@ -20,10 +20,9 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
   #ss: sample size
   sim_data <- MASS::mvrnorm(ss, mu, sigma) 
   
-  
   #Randomize TRT assignments using a specified treatment rate
   #0 for PBO and 1 for treatment TRT.
-  trt <- 1 * (runif(ss) <= trt.rate)
+  trt <- sample(0:1, ss, replace = T, prob=c(1-trt.rate, trt.rate))
   
   #TRT set and PBO set
   trt_set <- which(trt == 1)
@@ -31,35 +30,30 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
   
   #Randomize ET status
   if (nf == 2){
-    # For 2 post-baseline visits:
-    # 0 means not ET,
-    # 1 means ET before follow-up 1, EFU,
-    # 2 means ET before follow-up 1, not EFU,
-    # 3 means ET between follow-up 1 and follow-up 2, EFU ,
-    # 4 means ET between follow-up 1 and follow-up 2, not EFU.
-    efu_trt <- sample(0:4, length(trt_set), replace =T, 
-                      prob = c((1 - fu1$et.rate.trt - fu2$et.rate.trt), 
-                               (fu1$et.rate.trt)*c(fu1$efu.rate, 1-fu1$efu.rate), 
-                               (fu2$et.rate.trt)*c(fu2$efu.rate, 1-fu2$efu.rate))) 
-    efu_pbo <- sample(0:4, length(pbo_set), replace =T, 
-                      prob = c((1 - fu1$et.rate.pbo - fu2$et.rate.pbo), 
-                               (fu1$et.rate.pbo)*c(fu1$efu.rate, 1-fu1$efu.rate), 
-                               (fu2$et.rate.pbo)*c(fu2$efu.rate, 1-fu2$efu.rate))) 
+    et_end <- rep(0, ss) 
+    et_end[trt_set] <- sample(0:nf, length(trt_set), replace =T, 
+                              prob = c((1 - fu1$et.rate.trt - fu2$et.rate.trt), 
+                                       fu1$et.rate.trt, fu2$et.rate.trt)) 
+    et_end[pbo_set] <- sample(0:nf, length(pbo_set), replace =T, 
+                              prob = c((1 - fu1$et.rate.pbo-fu2$et.rate.pbo), 
+                                       fu1$et.rate.pbo, fu2$et.rate.pbo))
+    #ET subjects at each FU
+    et_fu1 <-  which(et_end == 1)
+    et_fu2 <-  which(et_end == 1 | et_end == 2) 
     
-    trt_end = pbo_end = rep(0, ss) 
-    trt_end[trt_set] <- efu_trt
-    pbo_end[pbo_set] <- efu_pbo
+    eff_fu1 = rep(fu1$eff, ss) #Efficacy at FU1, that will be adjust by TRT, ET and EFU
+    eff_fu2 = rep(fu2$eff, ss) #Efficacy at FU2, that will be adjust by TRT, ET and EFU
+    
+    eff_fu1[et_fu1] <- sample(c(fu1$eff.efu, NA), length(et_fu1), replace =T, 
+                              prob = c(fu1$efu.rate, 1-fu1$efu.rate)) 
+    eff_fu2[et_fu2] <- sample(c(fu2$eff.efu, NA), length(et_fu2), replace =T, 
+                              prob = c(fu2$efu.rate, 1-fu2$efu.rate))
+    
     
     #Generate data with TRT Efficacy and EFU Efficacy
-    MMRM_data = data.frame(id=1:ss, trt = trt, 
-                        trt_end = trt_end,
-                        pbo_end = pbo_end,
-                        eff.y1 = (fu1$eff)*trt, 
-                        eff.y2 = (fu2$eff)*trt) %>%
-      dplyr::mutate(eff.y1 = replace(eff.y1, ((trt_end==2)|(pbo_end==2)), NA),
-                    eff.y1 = replace(eff.y1, ((trt==1)&(trt_end==1)), fu1$eff.efu),
-                    eff.y2 = replace(eff.y2, ((trt_end %in% c(1:2,4))|(pbo_end %in% c(1:2,4))), NA),
-                    eff.y2 = replace(eff.y2, ((trt==1)&(trt_end==3)), fu2$eff.efu)) %>%
+    MMRM_data = data.frame(id=1:ss, trt = trt, et_end = et_end,
+                           eff.y1 = eff_fu1*trt,
+                           eff.y2 = eff_fu2*trt) %>%
       dplyr::mutate(y0 = round(sim_data[, 1], 2),
                     y1 = round(sim_data[, 2]-eff.y1, 2),
                     y2 = round(sim_data[, 3]-eff.y2, 2))
@@ -67,42 +61,35 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
     MMRM_data = MMRM_data %>% 
       dplyr::select(id, trt, y0, y1, y2)
   }else {
-    # For 3 post-baseline visits:
-    # 0 means not ET,
-    # 1 means ET before follow-up 1, EFU,
-    # 2 means ET before follow-up 1, not EFU,
-    # 3 means ET between follow-up 1 and follow-up 2, EFU ,
-    # 4 means ET between follow-up 1 and follow-up 2, not EFU.
-    # 5 means ET between follow-up 2 and follow-up 3, EFU ,
-    # 6 means ET between follow-up 2 and follow-up 3, not EFU.
-    efu_trt <- sample(0:6, length(trt_set), replace =T, 
-                      prob = c((1 - fu1$et.rate.trt - fu2$et.rate.trt - fu3$et.rate.trt), 
-                               (fu1$et.rate.trt)*c(fu1$efu.rate, 1-fu1$efu.rate), 
-                               (fu2$et.rate.trt)*c(fu2$efu.rate, 1-fu2$efu.rate),
-                               (fu3$et.rate.trt)*c(fu3$efu.rate, 1-fu3$efu.rate))) 
-    efu_pbo <- sample(0:6, length(pbo_set), replace =T, 
-                      prob = c((1 - fu1$et.rate.pbo - fu2$et.rate.pbo - fu3$et.rate.pbo), 
-                               (fu1$et.rate.pbo)*c(fu1$efu.rate, 1-fu1$efu.rate), 
-                               (fu2$et.rate.pbo)*c(fu2$efu.rate, 1-fu2$efu.rate),
-                               (fu3$et.rate.pbo)*c(fu3$efu.rate, 1-fu3$efu.rate))) 
+    et_end <- rep(0, ss) 
+    et_end[trt_set] <- sample(0:nf, length(trt_set), replace =T, 
+                              prob = c((1 - fu1$et.rate.trt - fu2$et.rate.trt - fu3$et.rate.trt), 
+                                       fu1$et.rate.trt, fu2$et.rate.trt, fu3$et.rate.trt))
+    et_end[pbo_set] <- sample(0:nf, length(pbo_set), replace =T, 
+                              prob = c((1 - fu1$et.rate.pbo - fu2$et.rate.pbo - fu3$et.rate.pbo), 
+                                       fu1$et.rate.pbo, fu2$et.rate.pbo, fu3$et.rate.pbo))
+    #ET subjects at each FU
+    et_fu1 <-  which(et_end == 1)
+    et_fu2 <-  which(et_end == 1 | et_end == 2)
+    et_fu3 <-  which(et_end == 1 | et_end == 2 | et_end == 3)
     
-    trt_end = pbo_end = rep(0, ss) 
-    trt_end[trt_set] <- efu_trt
-    pbo_end[pbo_set] <- efu_pbo
-   
+    eff_fu1 = rep(fu1$eff, ss) #Efficacy at FU1, that will be adjust by TRT, ET and EFU
+    eff_fu2 = rep(fu2$eff, ss) #Efficacy at FU2, that will be adjust by TRT, ET and EFU
+    eff_fu3 = rep(fu3$eff, ss) #Efficacy at FU3, that will be adjust by TRT, ET and EFU
+    
+    eff_fu1[et_fu1] <- sample(c(fu1$eff.efu, NA), length(et_fu1), replace =T, 
+                              prob = c(fu1$efu.rate, 1-fu1$efu.rate))
+    eff_fu2[et_fu2] <- sample(c(fu2$eff.efu, NA), length(et_fu2), replace =T, 
+                              prob = c(fu2$efu.rate, 1-fu2$efu.rate))
+    eff_fu3[et_fu3] <- sample(c(fu3$eff.efu, NA), length(et_fu3), replace =T, 
+                              prob = c(fu3$efu.rate, 1-fu3$efu.rate))
+    
+    
     #Generate data with TRT Efficacy and EFU Efficacy
-    MMRM_data = data.frame(id=1:ss, trt = trt, 
-                        trt_end = trt_end,
-                        pbo_end = pbo_end,
-                        eff.y1 = (fu1$eff)*trt, 
-                        eff.y2 = (fu2$eff)*trt,
-                        eff.y3 = (fu3$eff)*trt) %>%
-      dplyr::mutate(eff.y1 = replace(eff.y1, ((trt_end==2)|(pbo_end==2)), NA),
-                    eff.y1 = replace(eff.y1, ((trt==1)&(trt_end==1)), fu1$eff.efu),
-                    eff.y2 = replace(eff.y2, ((trt_end %in% c(1:2,4))|(pbo_end %in% c(1:2,4))), NA),
-                    eff.y2 = replace(eff.y2, ((trt==1)&(trt_end==3)), fu2$eff.efu),
-                    eff.y3 = replace(eff.y3, ((trt_end %in% c(1:4,6))|(pbo_end %in% c(1:4,6))), NA),
-                    eff.y3 = replace(eff.y3, ((trt==1)&(trt_end==5)), fu3$eff.efu)) %>%
+    MMRM_data = data.frame(id=1:ss, trt = trt, et_end = et_end,
+                           eff.y1 = eff_fu1*trt,
+                           eff.y2 = eff_fu2*trt,
+                           eff.y3 = eff_fu3*trt) %>%
       dplyr::mutate(y0 = round(sim_data[, 1], 2),
                     y1 = round(sim_data[, 2]-eff.y1, 2),
                     y2 = round(sim_data[, 3]-eff.y2, 2),
@@ -118,7 +105,7 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
 
 #Generate data for n trials.
 MMRM.sim.n <- function(n, seed, ss, trt.rate, mu0, sd0, corr0, 
-                             fu1, fu2, fu3=NULL){
+                       fu1, fu2, fu3=NULL){
   #Set up parallel generators and a seed
   my_cluster <- makeCluster(num.core) #
   clusterSetRNGStream(cl = my_cluster, seed)

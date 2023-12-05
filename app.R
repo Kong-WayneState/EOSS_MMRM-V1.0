@@ -6,9 +6,10 @@
 
 #'Step 2: Set the number of cores for parallel calculation. 
 #'The default setup is with 6 cores.
-num.core = 6     #select and run the code in the console
 #'You can adjust this number based on your system capabilities. 
 #'For example, if your computer has 32 cores, you may set it to 32 or a lower value.
+rm(list=ls())
+num.core = 6    #select and run the code in the console
 
 
 #'Step 3: Click "Run App" button in the script editor toolbar to launch the Shiny app.
@@ -49,7 +50,8 @@ app_server <- function(input, output, session) {
 
 
 shinyApp(
-  #options = list(launch.browser = TRUE),
+  options = list(launch.browser = TRUE),
   ui = app_ui, 
-  server = app_server)
+  server = app_server
+  )
 
