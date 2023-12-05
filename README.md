@@ -6,7 +6,7 @@
 
 3. In the R Studio console, install the necessary packages (only needed for the first time).
    
-   For example: install.packages(c("shiny", "shinyjs", shinydashboard", "dplyr", "mmrm"))
+   For example: install.packages(c("shiny","shinyjs","shinydashboard","shinytheme","htmltools","DT","dplyr","mmrm"))
 
 4. Set the number of cores for parallel calculation.
    
@@ -16,4 +16,4 @@
    
    For example, if your computer has 32 cores, you may set it to 32 or a lower value.
    
-5. Then you can launch the Shiny app by clicking the "Run App" button in the script editor toolbar.
+5. Then you can launch the Shiny App by clicking the "Run App" button in the script editor toolbar.
