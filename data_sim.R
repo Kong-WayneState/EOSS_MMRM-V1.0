@@ -8,17 +8,18 @@
 library(parallel)
 
 #Generate data for a single trial
-MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
+MMRM.sim.1 <- function(nsim, ss, trt.rate, mu, sd, corr, fu1, fu2, fu3=NULL){
   library(dplyr)
   nf = ifelse(is.list(fu3), 3, 2) # nf: number of post-baseline visits
-  mu <- rep(mu0, (nf+1))   # baseline mean vector
-  rho <- matrix(corr0, (nf+1), (nf+1))
+  mean <- rep(mu, (nf+1))   # baseline mean vector
+  rho <- matrix(corr, (nf+1), (nf+1))
   diag(rho) <- 1       # correlation matrix
-  sigma <- sd0^2 * rho # covariance matrix
+  sigma <- sd^2 * rho # covariance matrix
   
   #Generate (nf+1)-dimensional multinormal data
   #ss: sample size
-  sim_data <- MASS::mvrnorm(ss, mu, sigma) 
+  sim_data <- MASS::mvrnorm(ss, mean, sigma) 
+  
   
   #Randomize TRT assignments using a specified treatment rate
   #0 for PBO and 1 for treatment TRT.
@@ -104,14 +105,14 @@ MMRM.sim.1 <- function(nsim, ss, trt.rate, mu0, sd0, corr0, fu1, fu2, fu3=NULL){
 }
 
 #Generate data for n trials.
-MMRM.sim.n <- function(n, seed, ss, trt.rate, mu0, sd0, corr0, 
+MMRM.sim.n <- function(n, seed, ss, trt.rate, mu, sd, corr, 
                        fu1, fu2, fu3=NULL){
   #Set up parallel generators and a seed
   my_cluster <- makeCluster(num.core) #
   clusterSetRNGStream(cl = my_cluster, seed)
   
   simdata <- parLapply(my_cluster, 1:n, MMRM.sim.1, ss=ss, trt.rate=trt.rate, 
-                       mu0=mu0, sd0=sd0, corr0=corr0, 
+                       mu=mu, sd=sd, corr=corr, 
                        fu1=fu1, fu2=fu2, fu3=fu3)
   
   stopCluster(my_cluster)
