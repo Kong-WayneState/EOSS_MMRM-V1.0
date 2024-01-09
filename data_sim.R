@@ -1,11 +1,12 @@
 #'Generate MMRM Data.
 
+library(parallel)
 #'Set the number of cores for parallel calculation. 
-#'The default setup is with 6 cores.
-# num.core = 6     #select and run the code in the console
 #'This step is not necessary if you have already defined it in app.R
 
-library(parallel)
+if(!exists("num.core")) {
+  num.core = detectCores() - 1
+    }
 
 #Generate data for a single trial
 MMRM.sim.1 <- function(nsim, ss, trt.rate, mu, sd, corr, fu1, fu2, fu3=NULL){
