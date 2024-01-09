@@ -1,8 +1,8 @@
 #'Generate MMRM Data.
 
 library(parallel)
-#'Set the number of cores for parallel calculation. 
-#'This step is not necessary if you have already defined it in app.R
+# Set the number of cores for parallel calculation. 
+# This step is not necessary if you have already defined it in app.R
 
 if(!exists("num.core")) {
   num.core = detectCores() - 1
