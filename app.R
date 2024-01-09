@@ -50,7 +50,7 @@ app_server <- function(input, output, session) {
 
 
 shinyApp(
-  options = list(launch.browser = TRUE),
+  # options = list(launch.browser = TRUE),
   ui = app_ui, 
   server = app_server
   )
