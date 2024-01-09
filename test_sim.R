@@ -1,12 +1,12 @@
 #'Calculate the Power
 
-#'Set the number of cores for parallel calculation. 
-#'The default setup is with 6 cores.
-# num.core = 6     #select and run the code in the console
-#'This step is not necessary if you have already defined it in app.R
-
-
 library(parallel)
+# Set the number of cores for parallel calculation. 
+# This step is not necessary if you have already defined it in app.R
+
+if(!exists("num.core")) {
+  num.core = detectCores() - 1
+    }
 
 #Calculate the p-value for one trial of data using mmrm() regression
 MMRM.test.1 <- function(MMRM_data){
