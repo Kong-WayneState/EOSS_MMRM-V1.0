@@ -5,7 +5,7 @@ library(parallel)
 # This step is not necessary if you have already defined it in app.R
 
 if(!exists("num.core")) {
-  num.core = detectCores() - 1
+  num.core = detectCores() - 2
     }
 
 #Generate data for a single trial
