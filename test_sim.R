@@ -20,7 +20,8 @@ MMRM.test.1 <- function(MMRM_data){
     
     fit3 = mmrm::mmrm(formula = y ~ y0+trt+time+trt*time+y0*time + us(time|id), 
                       data = longData, 
-                      control = mmrm_control(method = "Kenward-Roger-Linear")) # mmrm v0.2.2
+                      control = mmrm_control(method = "Kenward-Roger",
+                                             vcov = "Kenward-Roger-Linear")) # mmrm v0.3.11
                       
     #control = mmrm_control(method = "Kenward-Roger",
     #vcov = "Kenward-Roger-Linear")) # mmrm v0.3.6
@@ -36,7 +37,8 @@ MMRM.test.1 <- function(MMRM_data){
     
     fit2 = mmrm::mmrm(formula = y ~ y0+trt+time+trt*time+y0*time + us(time|id), 
                       data = longData, 
-                      control = mmrm_control(method = "Kenward-Roger-Linear")) # mmrm v0.2.2
+                      control = mmrm_control(method = "Kenward-Roger",
+                                             vcov = "Kenward-Roger-Linear")) # mmrm v0.3.6
     
     #control = mmrm_control(method = "Kenward-Roger",
     #vcov = "Kenward-Roger-Linear")) # mmrm v0.3.6
